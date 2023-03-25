@@ -89,12 +89,59 @@ int draw3dAxes(cv::Mat& src, cv::Mat& camera_matrix, cv::Mat& dist_coeff, cv::Ma
 int draw3dObject(cv::Mat& src, cv::Mat& camera_matrix, cv::Mat& dist_coeff, cv::Mat& rot, cv::Mat& trans)
 {
 
-    std::string bunny_path = cv::samples::findFile("objects/house_obj.obj");
+    std::string bunny_path = cv::samples::findFile("objects/house.obj");
     OBJParser op;
     op.parseFile(bunny_path);
 
     std::vector<cv::Vec3f> points;
     std::vector<cv::Point2f> corners;
+
+    // PYRAMID
+    
+    points.push_back(cv::Vec3f({ 2, -2, 3 })); // center
+    points.push_back(cv::Vec3f({ 3, -1, 0 })); // tr
+    points.push_back(cv::Vec3f({ 3, -3, 0 })); // br
+    points.push_back(cv::Vec3f({ 1, -3, 0 })); // bl
+    points.push_back(cv::Vec3f({ 1, -1, 0 })); // tl
+
+    cv::projectPoints(points, rot, trans, camera_matrix, dist_coeff, corners);
+
+    cv::line(src, corners[0], corners[1], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[0], corners[2], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[0], corners[3], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[0], corners[4], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[1], corners[2], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[2], corners[3], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[3], corners[4], cv::Scalar(0, 255, 255), 5);
+    cv::line(src, corners[4], corners[1], cv::Scalar(0, 255, 255), 5);
+
+    points.clear();
+    corners.clear();
+
+    // CUBE
+    points.push_back(cv::Vec3f({ 8, -5, 0 })); // br
+    points.push_back(cv::Vec3f({ 8, -5, 2 }));
+    points.push_back(cv::Vec3f({ 6, -5, 0 })); // bl
+    points.push_back(cv::Vec3f({ 6, -5, 2 }));
+    points.push_back(cv::Vec3f({ 8, -3, 0 })); // tr
+    points.push_back(cv::Vec3f({ 8, -3, 2 }));
+    points.push_back(cv::Vec3f({ 6, -3, 0 })); // tl
+    points.push_back(cv::Vec3f({ 6, -3, 2 }));
+
+    cv::projectPoints(points, rot, trans, camera_matrix, dist_coeff, corners);
+
+    cv::line(src, corners[0], corners[2], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[4], corners[6], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[0], corners[4], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[2], corners[6], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[1], corners[3], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[5], corners[7], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[1], corners[5], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[3], corners[7], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[0], corners[1], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[2], corners[3], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[4], corners[5], cv::Scalar(255, 255, 0), 5);
+    cv::line(src, corners[6], corners[7], cv::Scalar(255, 255, 0), 5);
 
     //Display 3D Model
     std::vector<cv::Point2f> objPoints;

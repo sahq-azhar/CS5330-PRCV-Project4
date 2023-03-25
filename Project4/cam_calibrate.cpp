@@ -13,20 +13,19 @@ This function that takes in an image frame, an output matrix, and a vector of po
 The function detects the corners present in a checkerboard grid in the image frame, 
 draws them on the output matrix, and populates the vector with the coordinates of the detected corners.
  */
-bool extractCorners(const cv::Mat& src, cv::Mat& dst, std::vector<cv::Point2f>& corners, bool drawCorners)
+bool extractCorners(cv::Mat& src, cv::Mat& dst, std::vector<cv::Point2f>& corners, bool drawCorners)
 {
-    dst.create(src.size(), src.type());
+    dst = src.clone();
+
     bool found = cv::findChessboardCorners(src, cv::Size(9, 6), corners);
 
-    std::cout << "No. of corners detected: " << corners.size() << std::endl;
-    std::cout << "Coordinate of top left corner: " << corners[0].x << " " << corners[0].y << std::endl;
+    //std::cout << "No. of corners detected:- " << corners.size() << std::endl;
+    //std::cout << "Co-ordinate of top left corner:- " << corners[0].x << " " << corners[0].y << std::endl;
 
-    cv::Mat gray = src;
-    if (src.channels() > 1) {
-        cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
-    }
+    cv::Mat gray;
+    cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 
-    if (found) {
+    if (found == true) {
         cv::cornerSubPix(gray, corners, cv::Size(5, 5), cv::Size(-1, -1), cv::TermCriteria(cv::TermCriteria::COUNT | cv::TermCriteria::EPS, 30, 0.1));
     }
 
@@ -34,7 +33,7 @@ bool extractCorners(const cv::Mat& src, cv::Mat& dst, std::vector<cv::Point2f>& 
         cv::drawChessboardCorners(dst, cv::Size(6, 9), corners, found);
     }
 
-    return found;
+    return(found);
 }
 
 

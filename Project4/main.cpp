@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
             std::cout << "distortion coefficients: " << dist_coeff << std::endl;
         }
         // press 'r' for robust features
-        else if (key == 'r') {
+        else if (key == 'h') {
             drawCorners = !drawCorners;
             showAxes = false;
             showObject = false;
